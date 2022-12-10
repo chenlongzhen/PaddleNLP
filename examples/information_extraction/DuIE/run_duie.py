@@ -49,6 +49,7 @@ parser.add_argument("--output_dir", default="./checkpoints", type=str, required=
 parser.add_argument("--max_seq_length", default=128, type=int,help="The maximum total input sequence length after tokenization. Sequences longer "
     "than this will be truncated, sequences shorter will be padded.", )
 parser.add_argument("--batch_size", default=8, type=int, help="Batch size per GPU/CPU for training.", )
+parser.add_argument("--save_steps", default=10000, type=int, help="training save steps", )
 parser.add_argument("--learning_rate", default=5e-5, type=float, help="The initial learning rate for Adam.")
 parser.add_argument("--weight_decay", default=0.0, type=float, help="Weight decay if we apply some.")
 parser.add_argument("--num_train_epochs", default=3, type=int, help="Total number of training epochs to perform.")
@@ -203,7 +204,7 @@ def do_train():
     # Starts training.
     global_step = 0
     logging_steps = 50
-    save_steps = 10000
+    save_steps = args.save_steps
     tic_train = time.time()
     for epoch in range(args.num_train_epochs):
         print("\n=====start training of %d epochs=====" % epoch)
@@ -235,7 +236,7 @@ def do_train():
                 )
                 tic_train = time.time()
 
-            if global_step % save_steps == 0 and rank == 0:
+            if global_step % save_steps == 0 and rank == 0 and global_step != 0:
                 print("\n=====start evaluating ckpt of %d steps=====" % global_step)
                 precision, recall, f1 = evaluate(model, criterion, test_data_loader, eval_file_path, "eval")
                 print("precision: %.2f\t recall: %.2f\t f1: %.2f\t" % (100 * precision, 100 * recall, 100 * f1))
