@@ -17,7 +17,7 @@ python  run_duie_roberta.py \
                             --num_train_epochs $EPOCH \
                             --learning_rate $LR \
                             --warmup_ratio 0.06 \
-                            --output_dir ./checkpoints \
+                            --output_dir ./checkpoints_roberta \
                             --predict_data_file ./data/duie_test2.json \
                             --save_steps 10000 \
                             --pretrian_model_name hfl/roberta-wwm-ext
@@ -34,7 +34,7 @@ else
                               --num_train_epochs $EPOCH \
                               --learning_rate $LR \
                               --warmup_ratio 0.06 \
-                              --output_dir ./checkpoints \
+                              --output_dir ./checkpoints_roberta \
                               --predict_data_file ./data/duie_test2.json \
                               --save_steps 10000 \
                               --pretrian_model_name hfl/roberta-wwm-ext
