@@ -17,5 +17,6 @@ python -u -m paddle.distributed.launch --gpus "0" run_duie.py \
                             --warmup_ratio 0.06 \
                             --output_dir ./checkpoints \
                             --predict_data_file ./data/duie_test2.json \
-                            --save_steps 10000
+                            --save_steps 10000 \
+                            --pretrian_model_name roberta-wwm-ext-large
 shutdown

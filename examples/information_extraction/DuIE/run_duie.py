@@ -38,6 +38,7 @@ from utils import decoding, find_entity, get_precision_recall_f1, write_predicti
 
 # yapf: disable
 parser = argparse.ArgumentParser()
+parser.add_argument("--pretrian_model_name", default='ernie-3.0-medium-zh', type=str, help="pre train model name")
 parser.add_argument("--do_train", action='store_true', default=False, help="do train")
 parser.add_argument("--do_predict", action='store_true', default=False, help="do predict")
 parser.add_argument("--init_checkpoint", default=None, type=str, required=False, help="Path to initialize params from")
@@ -162,9 +163,9 @@ def do_train():
     num_classes = (len(label_map.keys()) - 2) * 2 + 2
 
     # Loads pretrained model ERNIE
-    model = AutoModelForTokenClassification.from_pretrained("ernie-3.0-medium-zh", num_classes=num_classes)
+    model = AutoModelForTokenClassification.from_pretrained(args.pretrian_model_name, num_classes=num_classes)
     model = paddle.DataParallel(model)
-    tokenizer = AutoTokenizer.from_pretrained("ernie-3.0-medium-zh")
+    tokenizer = AutoTokenizer.from_pretrained(args.pretrian_model_name)
     criterion = BCELossForDuIE()
 
     # Loads dataset.
@@ -271,8 +272,8 @@ def do_predict():
     num_classes = (len(label_map.keys()) - 2) * 2 + 2
 
     # Loads pretrained model ERNIE
-    model = AutoModelForTokenClassification.from_pretrained("ernie-3.0-medium-zh", num_classes=num_classes)
-    tokenizer = AutoTokenizer.from_pretrained("ernie-3.0-medium-zh")
+    model = AutoModelForTokenClassification.from_pretrained(args.pretrian_model_name, num_classes=num_classes)
+    tokenizer = AutoTokenizer.from_pretrained(args.pretrian_model_name)
     criterion = BCELossForDuIE()
 
     # Loads dataset.
