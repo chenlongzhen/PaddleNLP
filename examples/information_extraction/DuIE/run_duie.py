@@ -42,7 +42,9 @@ parser.add_argument("--do_train", action='store_true', default=False, help="do t
 parser.add_argument("--do_predict", action='store_true', default=False, help="do predict")
 parser.add_argument("--init_checkpoint", default=None, type=str, required=False, help="Path to initialize params from")
 parser.add_argument("--data_path", default="./data", type=str, required=False, help="Path to data.")
-parser.add_argument("--predict_data_file", default="./data/test_data.json", type=str, required=False, help="Path to data.")
+parser.add_argument("--train_data_file", default="./duie_train.json", type=str, required=False, help="train data file name.")
+parser.add_argument("--dev_data_file", default="./duie_dev.json", type=str, required=False, help="dev data filename.")
+parser.add_argument("--predict_data_file", default="./duie_test2.json", type=str, required=False, help="test data filename.")
 parser.add_argument("--output_dir", default="./checkpoints", type=str, required=False, help="The output directory where the model predictions and checkpoints will be written.")
 parser.add_argument("--max_seq_length", default=128, type=int,help="The maximum total input sequence length after tokenization. Sequences longer "
     "than this will be truncated, sequences shorter will be padded.", )
@@ -166,7 +168,7 @@ def do_train():
 
     # Loads dataset.
     train_dataset = DuIEDataset.from_file(
-        os.path.join(args.data_path, "train_data.json"), tokenizer, args.max_seq_length, True
+        os.path.join(args.data_path, args.train_data_file), tokenizer, args.max_seq_length, True
     )
     train_batch_sampler = paddle.io.DistributedBatchSampler(
         train_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True
@@ -175,7 +177,7 @@ def do_train():
     train_data_loader = DataLoader(
         dataset=train_dataset, batch_sampler=train_batch_sampler, collate_fn=collator, return_list=True
     )
-    eval_file_path = os.path.join(args.data_path, "dev_data.json")
+    eval_file_path = os.path.join(args.data_path, args.dev_data_file)
     test_dataset = DuIEDataset.from_file(eval_file_path, tokenizer, args.max_seq_length, True)
     test_batch_sampler = paddle.io.BatchSampler(
         test_dataset, batch_size=args.batch_size, shuffle=False, drop_last=True
@@ -273,7 +275,7 @@ def do_predict():
     criterion = BCELossForDuIE()
 
     # Loads dataset.
-    test_dataset = DuIEDataset.from_file(args.predict_data_file, tokenizer, args.max_seq_length, True)
+    test_dataset = DuIEDataset.from_file(os.path.join(args.data_path,args.predict_data_file), tokenizer, args.max_seq_length, True)
     collator = DataCollator()
     test_batch_sampler = paddle.io.BatchSampler(
         test_dataset, batch_size=args.batch_size, shuffle=False, drop_last=True

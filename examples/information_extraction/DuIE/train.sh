@@ -15,4 +15,5 @@ python -m paddle.distributed.launch --gpus "0" run_duie.py \
                             --num_train_epochs $EPOCH \
                             --learning_rate $LR \
                             --warmup_ratio 0.06 \
-                            --output_dir ./checkpoints
+                            --output_dir ./checkpoints \
+                            --predict_data_file ./data/duie_test2.json
