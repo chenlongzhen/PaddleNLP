@@ -2,10 +2,10 @@ set -eux
 
 export BATCH_SIZE=64
 export LR=2e-5
-export EPOCH=1
+export EPOCH=12
 
 unset CUDA_VISIBLE_DEVICES
-python -m paddle.distributed.launch --gpus "0" run_duie.py \
+python -u -m paddle.distributed.launch --gpus "0" run_duie.py \
                             --device gpu \
                             --seed 42 \
                             --do_train \
@@ -17,4 +17,5 @@ python -m paddle.distributed.launch --gpus "0" run_duie.py \
                             --warmup_ratio 0.06 \
                             --output_dir ./checkpoints \
                             --predict_data_file ./data/duie_test2.json \
-                            --save_steps 1000
+                            --save_steps 10000
+shutdown
